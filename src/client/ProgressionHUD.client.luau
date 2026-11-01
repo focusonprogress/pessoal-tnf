@@ -19,6 +19,20 @@ local ACCENT = Color3.fromRGB(255, 196, 0)
 local DARK = Color3.fromRGB(20, 20, 24)
 local FONT = Enum.Font.GothamBold
 
+-- Distância da barra de XP até a parte de baixo da tela.
+-- Se a hotbar de armas existir, a barra fica logo acima dela.
+local function getBottomOffset(): number
+	local hotbar = ReplicatedStorage:WaitForChild("Hotbar", 5)
+	local hotbarConfig = hotbar and hotbar:FindFirstChild("Config")
+	if hotbarConfig and hotbarConfig:IsA("ModuleScript") then
+		local HotbarConfig = require(hotbarConfig) :: any
+		return HotbarConfig.BottomMargin + HotbarConfig.SlotSize + 12
+	end
+	return 16
+end
+
+local BOTTOM_OFFSET = getBottomOffset()
+
 ---------------------------------------------------------------------------
 -- Montagem da interface
 ---------------------------------------------------------------------------
@@ -51,7 +65,7 @@ gui.Parent = player:WaitForChild("PlayerGui")
 local container = Instance.new("Frame")
 container.Name = "XPBar"
 container.AnchorPoint = Vector2.new(0.5, 1)
-container.Position = UDim2.new(0.5, 0, 1, -16)
+container.Position = UDim2.new(0.5, 0, 1, -BOTTOM_OFFSET)
 container.Size = UDim2.fromOffset(360, 30)
 container.BackgroundTransparency = 1
 container.Parent = gui
@@ -109,7 +123,7 @@ local titleLabel = label({
 local feed = Instance.new("Frame")
 feed.Name = "XPFeed"
 feed.AnchorPoint = Vector2.new(0.5, 1)
-feed.Position = UDim2.new(0.5, 0, 1, -72)
+feed.Position = UDim2.new(0.5, 0, 1, -(BOTTOM_OFFSET + 56))
 feed.Size = UDim2.fromOffset(360, 120)
 feed.BackgroundTransparency = 1
 feed.Parent = gui

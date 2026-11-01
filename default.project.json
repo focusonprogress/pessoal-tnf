@@ -14,6 +14,9 @@
         "LevelUp": {
           "$className": "RemoteEvent"
         }
+      },
+      "Hotbar": {
+        "$path": "src/shared/Hotbar"
       }
     },
     "ServerScriptService": {
@@ -28,6 +31,9 @@
       "StarterPlayerScripts": {
         "ProgressionHUD": {
           "$path": "src/client/ProgressionHUD.client.luau"
+        },
+        "Hotbar": {
+          "$path": "src/client/Hotbar.client.luau"
         }
       }
     }

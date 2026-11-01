@@ -7,6 +7,7 @@ Sistemas para o meu jogo de tiro no Roblox (que usa o **ACS**).
 | Sistema | Status |
 |---|---|
 | Progressão (XP, níveis, desbloqueios) | ✅ |
+| Hotbar de armas (substitui a mochila padrão) | ✅ |
 
 ---
 
@@ -41,8 +42,10 @@ da tabela abaixo e cole o conteúdo de cada arquivo.
 | `src/server/Progression/KillTracker.luau` | `ServerScriptService > Progression > KillTracker` | ModuleScript |
 | `src/server/StartProgression.server.luau` | `ServerScriptService > StartProgression` | Script |
 | `src/client/ProgressionHUD.client.luau` | `StarterPlayer > StarterPlayerScripts > ProgressionHUD` | LocalScript |
+| `src/shared/Hotbar/Config.luau` | `ReplicatedStorage > Hotbar > Config` | ModuleScript |
+| `src/client/Hotbar.client.luau` | `StarterPlayer > StarterPlayerScripts > Hotbar` | LocalScript |
 
-(`ReplicatedStorage > Progression` e `ServerScriptService > Progression` são **Folders**.)
+(`ReplicatedStorage > Progression`, `ServerScriptService > Progression` e `ReplicatedStorage > Hotbar` são **Folders**.)
 
 ---
 
@@ -119,3 +122,21 @@ Também dá para ler direto do jogador (inclusive no cliente):
 
 Para salvar dados no Studio, ative **Game Settings → Security → Enable Studio Access to API Services**.
 Sem isso, o sistema funciona com dados temporários e mostra um aviso no Output.
+
+---
+
+## Hotbar de armas
+
+Substitui a mochila padrão do Roblox por uma hotbar no mesmo estilo da barra de XP.
+
+- Teclas **1 a 9** equipam e desequipam (no celular, é só tocar no espaço)
+- A arma equipada fica destacada em amarelo
+- Mostra o ícone da arma quando a Tool tem `TextureId`; sem ícone, mostra o nome
+- Diminui sozinha em telas pequenas (celular)
+- A barra de XP fica automaticamente logo acima dela
+
+Tamanho, cores, teclas e se mostra espaços vazios ficam em
+[`src/shared/Hotbar/Config.luau`](src/shared/Hotbar/Config.luau).
+
+> Se o jogo tinha outra hotbar feita antes, **apague ou desative** a antiga,
+> senão as duas aparecem uma em cima da outra.
