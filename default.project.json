@@ -26,6 +26,9 @@
         "ChooseTeam": {
           "$className": "RemoteFunction"
         }
+      },
+      "Nametags": {
+        "$path": "src/shared/Nametags"
       }
     },
     "ServerScriptService": {
@@ -49,6 +52,9 @@
         },
         "TeamSelect": {
           "$path": "src/client/TeamSelect.client.luau"
+        },
+        "Nametags": {
+          "$path": "src/client/Nametags.client.luau"
         }
       }
     }

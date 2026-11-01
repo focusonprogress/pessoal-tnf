@@ -9,6 +9,7 @@ Sistemas para o meu jogo de tiro no Roblox (que usa o **ACS**).
 | Progressão (XP, níveis, desbloqueios) | ✅ |
 | Hotbar de armas (substitui a mochila padrão) | ✅ |
 | Tela de escolha de time | ✅ |
+| Tags de nível/título (cabeça e chat) | ✅ |
 
 ---
 
@@ -50,9 +51,11 @@ da tabela abaixo e cole o conteúdo de cada arquivo.
 | — | `ReplicatedStorage > TeamSelectRemotes > ChooseTeam` | **RemoteFunction** |
 | `src/server/TeamSelect.server.luau` | `ServerScriptService > TeamSelect` | Script |
 | `src/client/TeamSelect.client.luau` | `StarterPlayer > StarterPlayerScripts > TeamSelect` | LocalScript |
+| `src/shared/Nametags/Config.luau` | `ReplicatedStorage > Nametags > Config` | ModuleScript |
+| `src/client/Nametags.client.luau` | `StarterPlayer > StarterPlayerScripts > Nametags` | LocalScript |
 
 (`ReplicatedStorage > Progression`, `ServerScriptService > Progression`, `ReplicatedStorage > Hotbar`,
-`ReplicatedStorage > TeamSelect` e `ReplicatedStorage > TeamSelectRemotes` são **Folders**.)
+`ReplicatedStorage > TeamSelect`, `ReplicatedStorage > TeamSelectRemotes` e `ReplicatedStorage > Nametags` são **Folders**.)
 
 ---
 
@@ -169,3 +172,18 @@ Se a imagem já for o card inteiro (com nome e fundo), use `Config.ImageMode = "
 Se algum não for encontrado, aparece um aviso `[TeamSelect]` no Output.
 
 > Desative a tela de times antiga, senão as duas aparecem.
+
+---
+
+## Tags de nível e título
+
+- **Acima da cabeça:** `Nv 12 · Sargento` na cor do time, com o nome embaixo
+  (substitui o nome padrão do Roblox)
+- **No chat:** `[Nv 12 · Sargento] Fulano: mensagem`
+- Por padrão você **só vê a tag de aliados** e de times neutros (Morador), para não entregar
+  a posição de inimigos escondidos. Dá para mudar em `ShowForEnemies`
+
+Configuração em [`src/shared/Nametags/Config.luau`](src/shared/Nametags/Config.luau).
+
+> O Roblox só permite um `TextChatService.OnIncomingMessage` por jogo. Se outro script
+> já usa (ex.: tags de VIP), as tags do chat de um dos dois vão parar de aparecer.
