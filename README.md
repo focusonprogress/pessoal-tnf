@@ -13,6 +13,9 @@ Sistemas para o meu jogo de tiro no Roblox (que usa o **ACS**).
 | Eventos de servidor | ✅ |
 | Recompensa por cabeça | ✅ |
 | Missões diárias | ✅ |
+| Recompensa de login diário | ✅ |
+| Conquistas | ✅ |
+| Câmera de morte (assistir quem te matou) | ✅ |
 
 ---
 
@@ -60,20 +63,29 @@ da tabela abaixo e cole o conteúdo de cada arquivo.
 | `src/shared/GameEvents/Config.luau` | `ReplicatedStorage > GameEvents > Config` | ModuleScript |
 | `src/shared/Bounty/Config.luau` | `ReplicatedStorage > Bounty > Config` | ModuleScript |
 | `src/shared/Missions/Config.luau` | `ReplicatedStorage > Missions > Config` | ModuleScript |
-| — | `ReplicatedStorage > GameRemotes > Announce` | RemoteEvent |
+| `src/shared/DailyRewards/Config.luau` | `ReplicatedStorage > DailyRewards > Config` | ModuleScript |
+| `src/shared/Achievements/Config.luau` | `ReplicatedStorage > Achievements > Config` | ModuleScript |
+| — | `ReplicatedStorage > GameRemotes` (Announce, ClaimDaily, KilledBy) | criados sozinhos pelo servidor |
+| `src/server/Gameplay/Remotes.luau` | `ServerScriptService > Gameplay > Remotes` | ModuleScript |
 | `src/server/Gameplay/Announcer.luau` | `ServerScriptService > Gameplay > Announcer` | ModuleScript |
 | `src/server/Gameplay/Events.luau` | `ServerScriptService > Gameplay > Events` | ModuleScript |
 | `src/server/Gameplay/Money.luau` | `ServerScriptService > Gameplay > Money` | ModuleScript |
 | `src/server/Gameplay/Bounty.luau` | `ServerScriptService > Gameplay > Bounty` | ModuleScript |
 | `src/server/Gameplay/Missions.luau` | `ServerScriptService > Gameplay > Missions` | ModuleScript |
+| `src/server/Gameplay/DailyRewards.luau` | `ServerScriptService > Gameplay > DailyRewards` | ModuleScript |
+| `src/server/Gameplay/Achievements.luau` | `ServerScriptService > Gameplay > Achievements` | ModuleScript |
+| `src/server/Gameplay/DeathCam.luau` | `ServerScriptService > Gameplay > DeathCam` | ModuleScript |
 | `src/server/StartGameplay.server.luau` | `ServerScriptService > StartGameplay` | Script |
 | `src/client/GameHUD.client.luau` | `StarterPlayer > StarterPlayerScripts > GameHUD` | LocalScript |
 | `src/client/BountyMarkers.client.luau` | `StarterPlayer > StarterPlayerScripts > BountyMarkers` | LocalScript |
 | `src/client/Missions.client.luau` | `StarterPlayer > StarterPlayerScripts > Missions` | LocalScript |
+| `src/client/DailyRewards.client.luau` | `StarterPlayer > StarterPlayerScripts > DailyRewards` | LocalScript |
+| `src/client/Achievements.client.luau` | `StarterPlayer > StarterPlayerScripts > Achievements` | LocalScript |
+| `src/client/DeathCam.client.luau` | `StarterPlayer > StarterPlayerScripts > DeathCam` | LocalScript |
 
 (`ReplicatedStorage > Progression`, `ServerScriptService > Progression`, `ReplicatedStorage > Hotbar`,
 `ReplicatedStorage > TeamSelect`, `ReplicatedStorage > TeamSelectRemotes`, `ReplicatedStorage > Nametags`, `Economy`, `GameEvents`, `Bounty`,
-`Missions`, `GameRemotes` e `ServerScriptService > Gameplay` são **Folders**.)
+`Missions`, `DailyRewards`, `Achievements`, `GameRemotes` e `ServerScriptService > Gameplay` são **Folders**.)
 
 ---
 
@@ -245,3 +257,20 @@ Botão **MISSÕES** abre o painel com o progresso. Completou, recebe na hora.
 
 Configuração em [`src/shared/Missions/Config.luau`](src/shared/Missions/Config.luau).
 Nas missões de arma, os nomes em `Weapons` precisam ser iguais aos nomes das Tools.
+
+## Recompensa de login diário
+
+Uma janela com 7 dias de prêmios que vão aumentando (R$ 500 no dia 1 até R$ 10.000 no dia 7).
+Abre sozinha quando tem recompensa para pegar; botão **DIÁRIO** abre de novo. Se pular um dia,
+volta pro dia 1. Prêmios em [`src/shared/DailyRewards/Config.luau`](src/shared/DailyRewards/Config.luau).
+
+## Conquistas
+
+Medalhas permanentes (abates, sequências, nível, recompensas, missões, dias seguidos, tempo de
+jogo), cada uma com dinheiro e XP. Botão **CONQUISTAS** mostra o progresso. Lista em
+[`src/shared/Achievements/Config.luau`](src/shared/Achievements/Config.luau).
+
+## Câmera de morte
+
+Quando você morre, a câmera segue quem te matou até você renascer, com um painel mostrando
+o nome dele, a arma e quanta vida ele tinha.

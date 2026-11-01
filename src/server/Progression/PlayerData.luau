@@ -40,6 +40,12 @@ function PlayerData.Template()
 		Assists = 0,
 		BestStreak = 0,
 		Missions = {}, -- usado pelo sistema de missões diárias
+		LoginStreak = 0, -- dias seguidos resgatando a recompensa diária
+		LastLoginClaimDay = -1, -- último dia em que resgatou
+		BountiesCollected = 0,
+		MissionsCompleted = 0,
+		PlaytimeMinutes = 0,
+		Achievements = {}, -- conquistas desbloqueadas: { [Id] = true }
 	}
 end
 

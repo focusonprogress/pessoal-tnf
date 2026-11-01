@@ -17,6 +17,8 @@ local KIND_COLORS = {
 	Event = Color3.fromRGB(255, 196, 0),
 	Bounty = Color3.fromRGB(255, 70, 60),
 	Mission = Color3.fromRGB(80, 220, 120),
+	Achievement = Color3.fromRGB(190, 120, 255),
+	Daily = Color3.fromRGB(255, 196, 0),
 }
 local DEFAULT_COLOR = Color3.fromRGB(235, 235, 235)
 local MAX_TOASTS = 4

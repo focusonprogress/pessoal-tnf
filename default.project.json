@@ -43,10 +43,22 @@
         "$className": "Folder",
         "Announce": {
           "$className": "RemoteEvent"
+        },
+        "ClaimDaily": {
+          "$className": "RemoteFunction"
+        },
+        "KilledBy": {
+          "$className": "RemoteEvent"
         }
       },
       "GameEvents": {
         "$path": "src/shared/GameEvents"
+      },
+      "DailyRewards": {
+        "$path": "src/shared/DailyRewards"
+      },
+      "Achievements": {
+        "$path": "src/shared/Achievements"
       }
     },
     "ServerScriptService": {
@@ -88,6 +100,15 @@
         },
         "Missions": {
           "$path": "src/client/Missions.client.luau"
+        },
+        "DailyRewards": {
+          "$path": "src/client/DailyRewards.client.luau"
+        },
+        "Achievements": {
+          "$path": "src/client/Achievements.client.luau"
+        },
+        "DeathCam": {
+          "$path": "src/client/DeathCam.client.luau"
         }
       }
     }

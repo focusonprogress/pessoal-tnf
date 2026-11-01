@@ -26,6 +26,10 @@ local Money = require(script.Parent.Money)
 
 local Missions = {}
 
+local completedEvent = Instance.new("BindableEvent")
+-- Dispara quando um jogador completa uma missão: (player, mission)
+Missions.Completed = completedEvent.Event
+
 local started = false
 
 local function currentDay(): number
@@ -124,6 +128,7 @@ local function complete(player: Player, mission)
 		ProgressionService.AddXP(player, mission.XP, "Mission")
 	end
 	Announcer.To(player, `✅ Missão concluída: {missionText(mission)} (+{EconomyConfig.Format(paid)})`, "Mission")
+	completedEvent:Fire(player, mission)
 end
 
 -- Soma progresso nas missões de um tipo.

@@ -1,5 +1,6 @@
 --[[
-	Inicia os sistemas de jogo: eventos, recompensa por cabeça e missões.
+	Inicia os sistemas de jogo: eventos, recompensa por cabeça, missões,
+	recompensa diária, conquistas e câmera de morte.
 	(Depende da progressão, que também é iniciada aqui por garantia.)
 
 	As mensagens "[Gameplay] ..." no Output mostram até onde o script chegou.
@@ -27,8 +28,11 @@ local Gameplay = ServerScriptService:WaitForChild("Gameplay")
 local Events = require(Gameplay:WaitForChild("Events"))
 print("[Gameplay] 3/5 Eventos carregados")
 local Bounty = require(Gameplay:WaitForChild("Bounty"))
-print("[Gameplay] 4/5 Recompensa carregada")
+print("[Gameplay] 4/5 Recompensa por cabeça carregada")
 local Missions = require(Gameplay:WaitForChild("Missions"))
+local DailyRewards = require(Gameplay:WaitForChild("DailyRewards"))
+local Achievements = require(Gameplay:WaitForChild("Achievements"))
+local DeathCam = require(Gameplay:WaitForChild("DeathCam"))
 
 ProgressionService.Start()
 KillTracker.Start()
@@ -41,4 +45,7 @@ end)
 Events.Start()
 Bounty.Start()
 Missions.Start()
-print("[Gameplay] 5/5 Tudo pronto! Eventos, recompensa e missões funcionando.")
+DailyRewards.Start()
+Achievements.Start()
+DeathCam.Start()
+print("[Gameplay] 5/5 Tudo pronto! Eventos, recompensas, missões, diário, conquistas e câmera de morte funcionando.")

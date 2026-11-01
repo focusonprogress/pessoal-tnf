@@ -1,30 +1,13 @@
 --[[
 	Avisos na tela dos jogadores (aparecem no topo, no GameHUD).
 
-	kind muda a cor: "Event" (amarelo), "Bounty" (vermelho), "Mission" (verde).
+	kind muda a cor: "Event" (amarelo), "Bounty" (vermelho), "Mission" (verde),
+	"Achievement" (roxo), "Daily" (amarelo).
 ]]
 
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Remotes = require(script.Parent.Remotes)
 
--- Cria ReplicatedStorage > GameRemotes > Announce se não existir.
-local function getRemote(): RemoteEvent
-	local folder = ReplicatedStorage:FindFirstChild("GameRemotes")
-	if not folder then
-		folder = Instance.new("Folder")
-		folder.Name = "GameRemotes"
-		folder.Parent = ReplicatedStorage
-	end
-
-	local remote = folder:FindFirstChild("Announce")
-	if not remote then
-		remote = Instance.new("RemoteEvent")
-		remote.Name = "Announce"
-		remote.Parent = folder
-	end
-	return remote :: RemoteEvent
-end
-
-local AnnounceRemote = getRemote()
+local AnnounceRemote = Remotes.Event("Announce")
 
 local Announcer = {}
 
