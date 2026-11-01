@@ -76,6 +76,9 @@
       },
       "StartGameplay": {
         "$path": "src/server/StartGameplay.server.luau"
+      },
+      "Security": {
+        "$path": "src/server/Security"
       }
     },
     "StarterPlayer": {

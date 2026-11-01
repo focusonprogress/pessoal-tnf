@@ -16,6 +16,7 @@ Sistemas para o meu jogo de tiro no Roblox (que usa o **ACS**).
 | Recompensa de login diário | ✅ |
 | Conquistas | ✅ |
 | Câmera de morte (assistir quem te matou) | ✅ |
+| Proteção do ACS contra kill all (ACSGuard) | ✅ |
 
 ---
 
@@ -274,3 +275,14 @@ jogo), cada uma com dinheiro e XP. Botão **CONQUISTAS** mostra o progresso. Lis
 
 Quando você morre, a câmera segue quem te matou até você renascer, com um painel mostrando
 o nome dele, a arma e quanta vida ele tinha.
+
+## Proteção do ACS (ACSGuard)
+
+O ACS 2.0.1 confia no que o cliente manda na hora do dano, o que permite **kill all** e dano
+infinito. O `ACSGuard` (`ServerScriptService > Security > ACSGuard`) confere cada tiro no
+servidor: arma na mão do atirador, status lidos do servidor, distância real, limite de
+multiplicador, limite de tiros por segundo e de alvos diferentes por segundo. Quem passa dos
+limites tem o tiro ignorado e, depois de 5 advertências, é kickado.
+
+Precisa trocar a função `Damage` no script do servidor do ACS: passo a passo em
+[`docs/ACS_PATCH.md`](docs/ACS_PATCH.md).

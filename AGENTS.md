@@ -27,7 +27,8 @@ para armas e dano. O ACS **não** fica neste repositório: ele está só no jogo
 - **Nunca confie no cliente**: XP, níveis e desbloqueios são decididos só no servidor.
   RemoteEvents vão do servidor para o cliente só para mostrar coisas na tela
 - Não editar scripts do ACS por aqui. Integrações com o ACS ficam documentadas no README
-  (ex.: `KillTracker.Tag`)
+  e em `docs/` (ex.: `KillTracker.Tag`, `docs/ACS_PATCH.md`)
+- O ACS do jogo é a versão **2.0.1**. O dano passa por `ACSGuard.ValidateHit` (ver `docs/ACS_PATCH.md`)
 - Chamadas de DataStore sempre com `pcall` e novas tentativas
 - Ao criar um sistema novo: adicionar no `default.project.json`, na tabela de sistemas
   e na tabela de "copiar e colar" do README
