@@ -13,7 +13,7 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local Config = require(ReplicatedStorage:WaitForChild("Events"):WaitForChild("Config"))
+local Config = require(ReplicatedStorage:WaitForChild("GameEvents"):WaitForChild("Config"))
 local Announcer = require(script.Parent.Announcer)
 
 local Events = {}

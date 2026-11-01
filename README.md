@@ -57,7 +57,7 @@ da tabela abaixo e cole o conteúdo de cada arquivo.
 | `src/shared/Nametags/Config.luau` | `ReplicatedStorage > Nametags > Config` | ModuleScript |
 | `src/client/Nametags.client.luau` | `StarterPlayer > StarterPlayerScripts > Nametags` | LocalScript |
 | `src/shared/Economy/Config.luau` | `ReplicatedStorage > Economy > Config` | ModuleScript |
-| `src/shared/Events/Config.luau` | `ReplicatedStorage > Events > Config` | ModuleScript |
+| `src/shared/GameEvents/Config.luau` | `ReplicatedStorage > GameEvents > Config` | ModuleScript |
 | `src/shared/Bounty/Config.luau` | `ReplicatedStorage > Bounty > Config` | ModuleScript |
 | `src/shared/Missions/Config.luau` | `ReplicatedStorage > Missions > Config` | ModuleScript |
 | — | `ReplicatedStorage > GameRemotes > Announce` | RemoteEvent |
@@ -72,7 +72,7 @@ da tabela abaixo e cole o conteúdo de cada arquivo.
 | `src/client/Missions.client.luau` | `StarterPlayer > StarterPlayerScripts > Missions` | LocalScript |
 
 (`ReplicatedStorage > Progression`, `ServerScriptService > Progression`, `ReplicatedStorage > Hotbar`,
-`ReplicatedStorage > TeamSelect`, `ReplicatedStorage > TeamSelectRemotes`, `ReplicatedStorage > Nametags`, `Economy`, `Events`, `Bounty`,
+`ReplicatedStorage > TeamSelect`, `ReplicatedStorage > TeamSelectRemotes`, `ReplicatedStorage > Nametags`, `Economy`, `GameEvents`, `Bounty`,
 `Missions`, `GameRemotes` e `ServerScriptService > Gameplay` são **Folders**.)
 
 ---
@@ -221,7 +221,7 @@ A cada 10–15 minutos (com 2+ jogadores) começa um evento de 5 minutos: **XP e
 (VERMELHO/AMARELO ganham o dobro) ou **caçada** (recompensas por cabeça valem o triplo).
 Aparece um aviso e um contador no topo da tela.
 
-Configuração em [`src/shared/Events/Config.luau`](src/shared/Events/Config.luau).
+Configuração em [`src/shared/GameEvents/Config.luau`](src/shared/GameEvents/Config.luau).
 Para começar um evento por script (ex.: comando de admin):
 
 ```lua

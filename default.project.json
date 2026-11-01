@@ -33,9 +33,6 @@
       "Economy": {
         "$path": "src/shared/Economy"
       },
-      "Events": {
-        "$path": "src/shared/Events"
-      },
       "Bounty": {
         "$path": "src/shared/Bounty"
       },
@@ -47,6 +44,9 @@
         "Announce": {
           "$className": "RemoteEvent"
         }
+      },
+      "GameEvents": {
+        "$path": "src/shared/GameEvents"
       }
     },
     "ServerScriptService": {
