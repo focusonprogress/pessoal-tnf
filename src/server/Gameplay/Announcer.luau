@@ -6,7 +6,25 @@
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local AnnounceRemote = ReplicatedStorage:WaitForChild("GameRemotes"):WaitForChild("Announce") :: RemoteEvent
+-- Cria ReplicatedStorage > GameRemotes > Announce se não existir.
+local function getRemote(): RemoteEvent
+	local folder = ReplicatedStorage:FindFirstChild("GameRemotes")
+	if not folder then
+		folder = Instance.new("Folder")
+		folder.Name = "GameRemotes"
+		folder.Parent = ReplicatedStorage
+	end
+
+	local remote = folder:FindFirstChild("Announce")
+	if not remote then
+		remote = Instance.new("RemoteEvent")
+		remote.Name = "Announce"
+		remote.Parent = folder
+	end
+	return remote :: RemoteEvent
+end
+
+local AnnounceRemote = getRemote()
 
 local Announcer = {}
 
