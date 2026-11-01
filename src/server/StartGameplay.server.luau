@@ -14,6 +14,14 @@ local Events = require(Gameplay:WaitForChild("Events"))
 local Bounty = require(Gameplay:WaitForChild("Bounty"))
 local Missions = require(Gameplay:WaitForChild("Missions"))
 
+-- Confere se a progressão está atualizada (os sistemas novos usam essas funções).
+if not ProgressionService.ProfileLoaded or not ProgressionService.GetLiveData then
+	error("[Gameplay] O ProgressionService está desatualizado. Cole de novo o arquivo src/server/Progression/ProgressionService.luau")
+end
+if not KillTracker.PlayerKilled then
+	error("[Gameplay] O KillTracker está desatualizado. Cole de novo o arquivo src/server/Progression/KillTracker.luau")
+end
+
 ProgressionService.Start()
 KillTracker.Start()
 
