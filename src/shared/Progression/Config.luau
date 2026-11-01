@@ -97,6 +97,8 @@ Config.ReasonLabels = {
 	Assist = "Assistência",
 	KillStreak = "Sequência de abates",
 	Playtime = "Tempo de jogo",
+	Bounty = "Recompensa por cabeça",
+	Mission = "Missão concluída",
 	MatchWin = "Vitória",
 }
 

@@ -35,6 +35,22 @@ local streaks: { [Player]: number } = setmetatable({}, { __mode = "k" }) :: any
 
 local started = false
 
+local playerKilledEvent = Instance.new("BindableEvent")
+-- Dispara a cada morte processada: (victim: Player?, killer: Player?, weaponName: string?)
+-- victim é nil para NPCs; killer é nil quando não houve abate válido (queda, aliado, etc.).
+KillTracker.PlayerKilled = playerKilledEvent.Event
+
+local assistedEvent = Instance.new("BindableEvent")
+-- Dispara a cada assistência: (attacker: Player, victim: Player?)
+KillTracker.Assisted = assistedEvent.Event
+
+-- Nome da arma (Tool) que o jogador está segurando agora, ou nil.
+local function equippedWeapon(player: Player): string?
+	local character = player.Character
+	local tool = character and character:FindFirstChildOfClass("Tool")
+	return if tool then tool.Name else nil
+end
+
 local function debugLog(...)
 	if Config.Debug then
 		print("[Progression]", ...)
@@ -119,7 +135,9 @@ local function onDied(humanoid: Humanoid)
 		return true
 	end
 
+	local validKiller: Player? = nil
 	if killer and isValidAttacker(killer) then
+		validKiller = killer
 		awardKill(killer)
 		debugLog(`{killer.Name} matou {humanoid.Parent and humanoid.Parent.Name}`)
 	elseif not killer then
@@ -131,8 +149,12 @@ local function onDied(humanoid: Humanoid)
 		if attacker ~= killer and now - lastHit <= Config.Kills.AssistWindow and isValidAttacker(attacker) then
 			ProgressionService.IncrementStat(attacker, "Assists", 1)
 			ProgressionService.AddXP(attacker, Config.XP.Assist, "Assist")
+			assistedEvent:Fire(attacker, victim)
 		end
 	end
+
+	local weapon = if validKiller then equippedWeapon(validKiller) else nil
+	playerKilledEvent:Fire(victim, validKiller, weapon)
 end
 
 local function watchHumanoid(humanoid: Humanoid)

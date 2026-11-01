@@ -38,6 +38,14 @@ local levelUpEvent = Instance.new("BindableEvent")
 -- Dispara no servidor quando alguém sobe de nível: (player, newLevel, reward?)
 ProgressionService.LevelUp = levelUpEvent.Event
 
+local profileLoadedEvent = Instance.new("BindableEvent")
+-- Dispara no servidor quando os dados de um jogador terminam de carregar: (player)
+ProgressionService.ProfileLoaded = profileLoadedEvent.Event
+
+-- Função opcional que devolve um multiplicador extra de XP por jogador
+-- (usada pelos eventos de servidor, ex.: XP em dobro).
+local multiplierProvider: ((Player) -> number)? = nil
+
 local profiles: { [Player]: Profile } = {}
 local activeSaves = 0
 local started = false
@@ -129,6 +137,7 @@ local function onPlayerAdded(player: Player)
 	setupLeaderstats(player)
 	replicate(player, data)
 	debugLog(`{player.Name} carregado: nível {data.Level}, {data.XP} XP`)
+	profileLoadedEvent:Fire(player)
 end
 
 local function onPlayerRemoving(player: Player)
@@ -176,7 +185,9 @@ function ProgressionService.AddXP(player: Player, amount: number, reason: string
 		playerMultiplier = 1
 	end
 
-	local gained = math.floor(amount * Config.XPMultiplier * playerMultiplier + 0.5)
+	local extraMultiplier = if multiplierProvider then multiplierProvider(player) else 1
+
+	local gained = math.floor(amount * Config.XPMultiplier * playerMultiplier * extraMultiplier + 0.5)
 	if gained <= 0 then
 		return 0
 	end
@@ -241,6 +252,26 @@ function ProgressionService.GetLevel(player: Player): number
 end
 
 -- Cópia dos dados do jogador (mexer nela não altera nada), ou nil.
+-- Define a função de multiplicador extra de XP (ver multiplierProvider).
+function ProgressionService.SetMultiplierProvider(provider: ((Player) -> number)?)
+	multiplierProvider = provider
+end
+
+-- Tabela de dados REAL do jogador (não é cópia), para outros sistemas do
+-- servidor guardarem coisas salvas (ex.: missões). Chame MarkDirty depois de mudar.
+function ProgressionService.GetLiveData(player: Player)
+	local profile = profiles[player]
+	return if profile then profile.Data else nil
+end
+
+-- Marca que os dados mudaram e precisam ser salvos.
+function ProgressionService.MarkDirty(player: Player)
+	local profile = profiles[player]
+	if profile then
+		profile.Dirty = true
+	end
+end
+
 function ProgressionService.GetData(player: Player)
 	local profile = profiles[player]
 	return if profile then table.clone(profile.Data) else nil

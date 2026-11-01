@@ -39,6 +39,7 @@ function PlayerData.Template()
 		Deaths = 0,
 		Assists = 0,
 		BestStreak = 0,
+		Missions = {}, -- usado pelo sistema de missões diárias
 	}
 end
 

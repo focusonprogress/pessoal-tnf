@@ -10,6 +10,9 @@ Sistemas para o meu jogo de tiro no Roblox (que usa o **ACS**).
 | Hotbar de armas (substitui a mochila padrão) | ✅ |
 | Tela de escolha de time | ✅ |
 | Tags de nível/título (cabeça e chat) | ✅ |
+| Eventos de servidor | ✅ |
+| Recompensa por cabeça | ✅ |
+| Missões diárias | ✅ |
 
 ---
 
@@ -53,9 +56,24 @@ da tabela abaixo e cole o conteúdo de cada arquivo.
 | `src/client/TeamSelect.client.luau` | `StarterPlayer > StarterPlayerScripts > TeamSelect` | LocalScript |
 | `src/shared/Nametags/Config.luau` | `ReplicatedStorage > Nametags > Config` | ModuleScript |
 | `src/client/Nametags.client.luau` | `StarterPlayer > StarterPlayerScripts > Nametags` | LocalScript |
+| `src/shared/Economy/Config.luau` | `ReplicatedStorage > Economy > Config` | ModuleScript |
+| `src/shared/Events/Config.luau` | `ReplicatedStorage > Events > Config` | ModuleScript |
+| `src/shared/Bounty/Config.luau` | `ReplicatedStorage > Bounty > Config` | ModuleScript |
+| `src/shared/Missions/Config.luau` | `ReplicatedStorage > Missions > Config` | ModuleScript |
+| — | `ReplicatedStorage > GameRemotes > Announce` | RemoteEvent |
+| `src/server/Gameplay/Announcer.luau` | `ServerScriptService > Gameplay > Announcer` | ModuleScript |
+| `src/server/Gameplay/Events.luau` | `ServerScriptService > Gameplay > Events` | ModuleScript |
+| `src/server/Gameplay/Money.luau` | `ServerScriptService > Gameplay > Money` | ModuleScript |
+| `src/server/Gameplay/Bounty.luau` | `ServerScriptService > Gameplay > Bounty` | ModuleScript |
+| `src/server/Gameplay/Missions.luau` | `ServerScriptService > Gameplay > Missions` | ModuleScript |
+| `src/server/StartGameplay.server.luau` | `ServerScriptService > StartGameplay` | Script |
+| `src/client/GameHUD.client.luau` | `StarterPlayer > StarterPlayerScripts > GameHUD` | LocalScript |
+| `src/client/BountyMarkers.client.luau` | `StarterPlayer > StarterPlayerScripts > BountyMarkers` | LocalScript |
+| `src/client/Missions.client.luau` | `StarterPlayer > StarterPlayerScripts > Missions` | LocalScript |
 
 (`ReplicatedStorage > Progression`, `ServerScriptService > Progression`, `ReplicatedStorage > Hotbar`,
-`ReplicatedStorage > TeamSelect`, `ReplicatedStorage > TeamSelectRemotes` e `ReplicatedStorage > Nametags` são **Folders**.)
+`ReplicatedStorage > TeamSelect`, `ReplicatedStorage > TeamSelectRemotes`, `ReplicatedStorage > Nametags`, `Economy`, `Events`, `Bounty`,
+`Missions`, `GameRemotes` e `ServerScriptService > Gameplay` são **Folders**.)
 
 ---
 
@@ -187,3 +205,43 @@ Configuração em [`src/shared/Nametags/Config.luau`](src/shared/Nametags/Config
 
 > O Roblox só permite um `TextChatService.OnIncomingMessage` por jogo. Se outro script
 > já usa (ex.: tags de VIP), as tags do chat de um dos dois vão parar de aparecer.
+
+---
+
+## Dinheiro
+
+Os sistemas novos pagam no `leaderstats > Dinheiro` que o jogo já tem (quem salva é o sistema
+antigo). Nome do valor e formatação (`R$ 15.000`) em
+[`src/shared/Economy/Config.luau`](src/shared/Economy/Config.luau).
+
+## Eventos de servidor
+
+A cada 10–15 minutos (com 2+ jogadores) começa um evento de 5 minutos: **XP em dobro**,
+**dinheiro em dobro**, **operação policial** (PMERJ/BOPE ganham o dobro), **guerra de facções**
+(VERMELHO/AMARELO ganham o dobro) ou **caçada** (recompensas por cabeça valem o triplo).
+Aparece um aviso e um contador no topo da tela.
+
+Configuração em [`src/shared/Events/Config.luau`](src/shared/Events/Config.luau).
+Para começar um evento por script (ex.: comando de admin):
+
+```lua
+local Events = require(game.ServerScriptService.Gameplay.Events)
+Events.StartEvent("DoubleXP")
+```
+
+## Recompensa por cabeça
+
+Com **5 abates seguidos** sem morrer, a cabeça do jogador fica a prêmio (R$ 1.000, +R$ 500 por
+abate, até R$ 20.000). Todo mundo é avisado e vê um marcador **💀 R$ X** em cima dele.
+Quem matar leva o dinheiro e XP extra.
+
+Configuração em [`src/shared/Bounty/Config.luau`](src/shared/Bounty/Config.luau).
+
+## Missões diárias
+
+Cada jogador recebe **3 missões por dia** (renovam à meia-noite de Brasília), sorteadas da lista
+no Config: abates, assistências, sequência, tempo de jogo, recompensas e abates com tipos de arma.
+Botão **MISSÕES** abre o painel com o progresso. Completou, recebe na hora.
+
+Configuração em [`src/shared/Missions/Config.luau`](src/shared/Missions/Config.luau).
+Nas missões de arma, os nomes em `Weapons` precisam ser iguais aos nomes das Tools.

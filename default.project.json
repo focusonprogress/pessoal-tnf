@@ -29,6 +29,24 @@
       },
       "Nametags": {
         "$path": "src/shared/Nametags"
+      },
+      "Economy": {
+        "$path": "src/shared/Economy"
+      },
+      "Events": {
+        "$path": "src/shared/Events"
+      },
+      "Bounty": {
+        "$path": "src/shared/Bounty"
+      },
+      "Missions": {
+        "$path": "src/shared/Missions"
+      },
+      "GameRemotes": {
+        "$className": "Folder",
+        "Announce": {
+          "$className": "RemoteEvent"
+        }
       }
     },
     "ServerScriptService": {
@@ -40,6 +58,12 @@
       },
       "TeamSelect": {
         "$path": "src/server/TeamSelect.server.luau"
+      },
+      "Gameplay": {
+        "$path": "src/server/Gameplay"
+      },
+      "StartGameplay": {
+        "$path": "src/server/StartGameplay.server.luau"
       }
     },
     "StarterPlayer": {
@@ -55,6 +79,15 @@
         },
         "Nametags": {
           "$path": "src/client/Nametags.client.luau"
+        },
+        "GameHUD": {
+          "$path": "src/client/GameHUD.client.luau"
+        },
+        "BountyMarkers": {
+          "$path": "src/client/BountyMarkers.client.luau"
+        },
+        "Missions": {
+          "$path": "src/client/Missions.client.luau"
         }
       }
     }
