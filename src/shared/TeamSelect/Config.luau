@@ -44,6 +44,10 @@ Config.Teams = {
 	},
 }
 
+-- Time em que o jogador nasce antes de escolher (nil = Neutral).
+-- Não precisa estar na lista acima: ele não aparece como card.
+Config.DefaultTeam = "Morador" :: string?
+
 -- Como a imagem é usada:
 --   "Avatar": a imagem é só o boneco; o nome e as cores são desenhados pelo script.
 --   "FullCard": a imagem já é o card inteiro (com nome, fundo, etc.); o script

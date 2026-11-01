@@ -67,6 +67,24 @@ ChooseTeam.OnServerInvoke = function(player: Player, teamName: any): (boolean, s
 	return true, nil
 end
 
+-- Coloca quem acabou de entrar no time padrão (ex.: Morador).
+local defaultTeam = if Config.DefaultTeam then TeamLookup.FindTeam(Config.DefaultTeam) else nil
+if Config.DefaultTeam and not defaultTeam then
+	warn(`[TeamSelect] Time padrão "{Config.DefaultTeam}" não encontrado no serviço Teams.`)
+end
+
+local function onPlayerAdded(player: Player)
+	if defaultTeam and (player.Neutral or not player.Team) then
+		player.Neutral = false
+		player.Team = defaultTeam
+	end
+end
+
+Players.PlayerAdded:Connect(onPlayerAdded)
+for _, player in Players:GetPlayers() do
+	onPlayerAdded(player)
+end
+
 Players.PlayerRemoving:Connect(function(player)
 	lastChange[player] = nil
 end)
