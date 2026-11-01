@@ -5,6 +5,18 @@ e dano infinito. O `ACSGuard` refaz as contas no servidor antes de aplicar o dan
 
 > Faça um **backup** do jogo antes (File → Save to File).
 
+## Jeito mais fácil: trocar o script inteiro
+
+O arquivo [`docs/ACS_Server_protegido.luau`](ACS_Server_protegido.luau) é o script do servidor
+do ACS 2.0.1 **completo**, já com as mudanças dos passos 2 e 3 abaixo. Então:
+
+1. Faça o **passo 1** (criar o `ACSGuard`)
+2. Abra o script do servidor do ACS, apague tudo e cole o conteúdo de `ACS_Server_protegido.luau`
+3. Pule para o **passo 4** (testar)
+
+> Só serve se o seu script do servidor do ACS for igual ao original 2.0.1 deste jogo. Se você
+> mexeu nele depois, prefira fazer os passos 2 e 3 manualmente.
+
 ## 1. Criar o ACSGuard
 
 Em **ServerScriptService**, crie uma **Folder** chamada `Security` e, dentro dela, um
