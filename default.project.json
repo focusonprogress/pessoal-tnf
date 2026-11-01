@@ -1,0 +1,35 @@
+{
+  "name": "pessoal-tnf",
+  "tree": {
+    "$className": "DataModel",
+    "ReplicatedStorage": {
+      "Progression": {
+        "$path": "src/shared/Progression"
+      },
+      "ProgressionRemotes": {
+        "$className": "Folder",
+        "XPGained": {
+          "$className": "RemoteEvent"
+        },
+        "LevelUp": {
+          "$className": "RemoteEvent"
+        }
+      }
+    },
+    "ServerScriptService": {
+      "Progression": {
+        "$path": "src/server/Progression"
+      },
+      "StartProgression": {
+        "$path": "src/server/StartProgression.server.luau"
+      }
+    },
+    "StarterPlayer": {
+      "StarterPlayerScripts": {
+        "ProgressionHUD": {
+          "$path": "src/client/ProgressionHUD.client.luau"
+        }
+      }
+    }
+  }
+}
