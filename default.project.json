@@ -17,6 +17,15 @@
       },
       "Hotbar": {
         "$path": "src/shared/Hotbar"
+      },
+      "TeamSelect": {
+        "$path": "src/shared/TeamSelect"
+      },
+      "TeamSelectRemotes": {
+        "$className": "Folder",
+        "ChooseTeam": {
+          "$className": "RemoteFunction"
+        }
       }
     },
     "ServerScriptService": {
@@ -25,6 +34,9 @@
       },
       "StartProgression": {
         "$path": "src/server/StartProgression.server.luau"
+      },
+      "TeamSelect": {
+        "$path": "src/server/TeamSelect.server.luau"
       }
     },
     "StarterPlayer": {
@@ -34,6 +46,9 @@
         },
         "Hotbar": {
           "$path": "src/client/Hotbar.client.luau"
+        },
+        "TeamSelect": {
+          "$path": "src/client/TeamSelect.client.luau"
         }
       }
     }

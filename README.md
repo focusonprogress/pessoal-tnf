@@ -8,6 +8,7 @@ Sistemas para o meu jogo de tiro no Roblox (que usa o **ACS**).
 |---|---|
 | Progressão (XP, níveis, desbloqueios) | ✅ |
 | Hotbar de armas (substitui a mochila padrão) | ✅ |
+| Tela de escolha de time | ✅ |
 
 ---
 
@@ -44,8 +45,14 @@ da tabela abaixo e cole o conteúdo de cada arquivo.
 | `src/client/ProgressionHUD.client.luau` | `StarterPlayer > StarterPlayerScripts > ProgressionHUD` | LocalScript |
 | `src/shared/Hotbar/Config.luau` | `ReplicatedStorage > Hotbar > Config` | ModuleScript |
 | `src/client/Hotbar.client.luau` | `StarterPlayer > StarterPlayerScripts > Hotbar` | LocalScript |
+| `src/shared/TeamSelect/Config.luau` | `ReplicatedStorage > TeamSelect > Config` | ModuleScript |
+| `src/shared/TeamSelect/TeamLookup.luau` | `ReplicatedStorage > TeamSelect > TeamLookup` | ModuleScript |
+| — | `ReplicatedStorage > TeamSelectRemotes > ChooseTeam` | **RemoteFunction** |
+| `src/server/TeamSelect.server.luau` | `ServerScriptService > TeamSelect` | Script |
+| `src/client/TeamSelect.client.luau` | `StarterPlayer > StarterPlayerScripts > TeamSelect` | LocalScript |
 
-(`ReplicatedStorage > Progression`, `ServerScriptService > Progression` e `ReplicatedStorage > Hotbar` são **Folders**.)
+(`ReplicatedStorage > Progression`, `ServerScriptService > Progression`, `ReplicatedStorage > Hotbar`,
+`ReplicatedStorage > TeamSelect` e `ReplicatedStorage > TeamSelectRemotes` são **Folders**.)
 
 ---
 
@@ -140,3 +147,25 @@ Tamanho, cores, teclas e se mostra espaços vazios ficam em
 
 > Se o jogo tinha outra hotbar feita antes, **apague ou desative** a antiga,
 > senão as duas aparecem uma em cima da outra.
+
+---
+
+## Tela de escolha de time
+
+- Aparece quando o jogador entra e pelo botão **TROCAR TIME** durante a partida
+- Se adapta à tela: 4 cards em linha no PC e no celular deitado, grade 2x2 no celular em pé
+- O card inteiro é clicável, mostra quantos jogadores tem em cada time e destaca o seu time
+- O **servidor** é quem decide a troca: confere se o time existe, tempo de espera entre trocas,
+  limite de jogadores e balanceamento (os dois últimos vêm desligados)
+
+Tudo fica em [`src/shared/TeamSelect/Config.luau`](src/shared/TeamSelect/Config.luau):
+times, cores, imagens dos avatares, textos e regras.
+
+**Imagens dos avatares:** no menu antigo, clique na ImageLabel do avatar e copie o campo
+`Image` em Properties (ex.: `rbxassetid://1234567890`) para o `Image` do time no Config.
+Se a imagem já for o card inteiro (com nome e fundo), use `Config.ImageMode = "FullCard"`.
+
+**Nomes dos times:** o `TeamName` precisa ser o nome do Team no serviço **Teams** do Studio.
+Se algum não for encontrado, aparece um aviso `[TeamSelect]` no Output.
+
+> Desative a tela de times antiga, senão as duas aparecem.
