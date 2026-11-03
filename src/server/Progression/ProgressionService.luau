@@ -38,6 +38,10 @@ local levelUpEvent = Instance.new("BindableEvent")
 -- Dispara no servidor quando alguém sobe de nível: (player, newLevel, reward?)
 ProgressionService.LevelUp = levelUpEvent.Event
 
+local xpGainedEvent = Instance.new("BindableEvent")
+-- Dispara no servidor a cada XP ganho: (player, gained, reason?)
+ProgressionService.XPGained = xpGainedEvent.Event
+
 local profileLoadedEvent = Instance.new("BindableEvent")
 -- Dispara no servidor quando os dados de um jogador terminam de carregar: (player)
 ProgressionService.ProfileLoaded = profileLoadedEvent.Event
@@ -213,6 +217,7 @@ function ProgressionService.AddXP(player: Player, amount: number, reason: string
 
 	replicate(player, data)
 	XPGainedRemote:FireClient(player, gained, reason)
+	xpGainedEvent:Fire(player, gained, reason)
 
 	for _, level in newLevels do
 		local reward = LevelMath.GetReward(level)
@@ -244,6 +249,18 @@ function ProgressionService.SetStatMax(player: Player, stat: string, value: numb
 		profile.Data[stat] = value
 		profile.Dirty = true
 	end
+end
+
+-- Muda o nível do jogador direto (usado pelo painel de admin). XP do nível volta a 0.
+function ProgressionService.SetLevel(player: Player, level: number)
+	local profile = profiles[player]
+	if not profile or type(level) ~= "number" then
+		return
+	end
+	profile.Data.Level = math.clamp(math.floor(level), 1, Config.MaxLevel)
+	profile.Data.XP = 0
+	profile.Dirty = true
+	replicate(player, profile.Data)
 end
 
 function ProgressionService.GetLevel(player: Player): number

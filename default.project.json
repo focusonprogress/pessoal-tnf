@@ -49,6 +49,12 @@
         },
         "KilledBy": {
           "$className": "RemoteEvent"
+        },
+        "SeasonPassAction": {
+          "$className": "RemoteFunction"
+        },
+        "AdminAction": {
+          "$className": "RemoteFunction"
         }
       },
       "GameEvents": {
@@ -62,6 +68,9 @@
       },
       "Training": {
         "$path": "src/shared/Training"
+      },
+      "SeasonPass": {
+        "$path": "src/shared/SeasonPass"
       }
     },
     "ServerScriptService": {
@@ -118,6 +127,12 @@
         },
         "Training": {
           "$path": "src/client/Training.client.luau"
+        },
+        "SeasonPass": {
+          "$path": "src/client/SeasonPass.client.luau"
+        },
+        "Admin": {
+          "$path": "src/client/Admin.client.luau"
         }
       }
     }

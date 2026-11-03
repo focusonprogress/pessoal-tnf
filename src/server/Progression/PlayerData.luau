@@ -46,6 +46,9 @@ function PlayerData.Template()
 		MissionsCompleted = 0,
 		PlaytimeMinutes = 0,
 		Achievements = {}, -- conquistas desbloqueadas: { [Id] = true }
+		Season = {}, -- progresso do passe de temporada atual
+		Titles = {}, -- títulos exclusivos ganhos (lista de nomes)
+		EquippedTitle = "", -- título exclusivo equipado ("" = usa o título do nível)
 	}
 end
 

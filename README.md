@@ -18,6 +18,8 @@ Sistemas para o meu jogo de tiro no Roblox (que usa o **ACS**).
 | Câmera de morte (assistir quem te matou) | ✅ |
 | Proteção do ACS contra kill all (ACSGuard) | ✅ |
 | Modo treino (servidor vazio) | ✅ |
+| Passe de temporada | ✅ |
+| Painel de admin | ✅ |
 
 ---
 
@@ -68,6 +70,7 @@ da tabela abaixo e cole o conteúdo de cada arquivo.
 | `src/shared/DailyRewards/Config.luau` | `ReplicatedStorage > DailyRewards > Config` | ModuleScript |
 | `src/shared/Achievements/Config.luau` | `ReplicatedStorage > Achievements > Config` | ModuleScript |
 | `src/shared/Training/Config.luau` | `ReplicatedStorage > Training > Config` | ModuleScript |
+| `src/shared/SeasonPass/Config.luau` | `ReplicatedStorage > SeasonPass > Config` | ModuleScript |
 | — | `ReplicatedStorage > GameRemotes` (Announce, ClaimDaily, KilledBy) | criados sozinhos pelo servidor |
 | `src/server/Gameplay/Remotes.luau` | `ServerScriptService > Gameplay > Remotes` | ModuleScript |
 | `src/server/Gameplay/Announcer.luau` | `ServerScriptService > Gameplay > Announcer` | ModuleScript |
@@ -79,6 +82,9 @@ da tabela abaixo e cole o conteúdo de cada arquivo.
 | `src/server/Gameplay/Achievements.luau` | `ServerScriptService > Gameplay > Achievements` | ModuleScript |
 | `src/server/Gameplay/DeathCam.luau` | `ServerScriptService > Gameplay > DeathCam` | ModuleScript |
 | `src/server/Gameplay/Training.luau` | `ServerScriptService > Gameplay > Training` | ModuleScript |
+| `src/server/Gameplay/SeasonPass.luau` | `ServerScriptService > Gameplay > SeasonPass` | ModuleScript |
+| `src/server/Gameplay/AdminConfig.luau` | `ServerScriptService > Gameplay > AdminConfig` | ModuleScript |
+| `src/server/Gameplay/Admin.luau` | `ServerScriptService > Gameplay > Admin` | ModuleScript |
 | `src/server/StartGameplay.server.luau` | `ServerScriptService > StartGameplay` | Script |
 | `src/client/GameHUD.client.luau` | `StarterPlayer > StarterPlayerScripts > GameHUD` | LocalScript |
 | `src/client/BountyMarkers.client.luau` | `StarterPlayer > StarterPlayerScripts > BountyMarkers` | LocalScript |
@@ -87,10 +93,12 @@ da tabela abaixo e cole o conteúdo de cada arquivo.
 | `src/client/Achievements.client.luau` | `StarterPlayer > StarterPlayerScripts > Achievements` | LocalScript |
 | `src/client/DeathCam.client.luau` | `StarterPlayer > StarterPlayerScripts > DeathCam` | LocalScript |
 | `src/client/Training.client.luau` | `StarterPlayer > StarterPlayerScripts > Training` | LocalScript |
+| `src/client/SeasonPass.client.luau` | `StarterPlayer > StarterPlayerScripts > SeasonPass` | LocalScript |
+| `src/client/Admin.client.luau` | `StarterPlayer > StarterPlayerScripts > Admin` | LocalScript |
 
 (`ReplicatedStorage > Progression`, `ServerScriptService > Progression`, `ReplicatedStorage > Hotbar`,
 `ReplicatedStorage > TeamSelect`, `ReplicatedStorage > TeamSelectRemotes`, `ReplicatedStorage > Nametags`, `Economy`, `GameEvents`, `Bounty`,
-`Missions`, `DailyRewards`, `Achievements`, `Training`, `GameRemotes` e `ServerScriptService > Gameplay` são **Folders**.)
+`Missions`, `DailyRewards`, `Achievements`, `Training`, `SeasonPass`, `GameRemotes` e `ServerScriptService > Gameplay` são **Folders**.)
 
 ---
 
@@ -304,3 +312,26 @@ aparecem na frente do jogador.
 
 Configuração (tempo, bonecos, dicas, arma do treino) em
 [`src/shared/Training/Config.luau`](src/shared/Training/Config.luau).
+
+## Passe de temporada
+
+50 níveis por temporada com trilha **Grátis** e **Premium**. Todo XP ganho no jogo também
+enche o passe (1.000 XP por nível). Recompensas: dinheiro e **títulos exclusivos** que aparecem
+na tag e no chat (o jogador escolhe qual usar). Botão **PASSE** abre a tela.
+
+- **Premium:** crie um Gamepass em create.roblox.com (seu jogo → Monetização → Passes) e coloque
+  o ID em `Config.PremiumGamePassId`. Com 0, o botão de comprar não aparece.
+- **Nova temporada:** troque `SeasonId`, `SeasonName`, `EndsAt` e as recompensas. O progresso
+  do passe zera; os títulos ficam para sempre.
+
+Configuração em [`src/shared/SeasonPass/Config.luau`](src/shared/SeasonPass/Config.luau).
+
+## Painel de admin
+
+Botão **ADMIN** (só para admins): estatísticas dos jogadores, dar/tirar dinheiro, dar XP, mudar
+nível, ir até/puxar, tirar recompensa, dar Premium (na sessão), encerrar treino, kickar;
+começar/parar eventos, aviso para todos; e o log de advertências do ACSGuard.
+
+O dono do jogo (ou do grupo) e o Studio são sempre admin. Outros admins:
+`ServerScriptService > Gameplay > AdminConfig` (lista de UserIds ou rank mínimo do grupo).
+Toda ação é conferida no servidor.

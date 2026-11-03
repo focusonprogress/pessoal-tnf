@@ -53,6 +53,28 @@ type PlayerState = {
 
 local states: { [Player]: PlayerState } = {}
 
+-- Últimas advertências (para o painel de admin).
+local MAX_LOG = 50
+local log: { { Time: number, Player: string, UserId: number, Reason: string, Kicked: boolean } } = {}
+
+local function addLog(player: Player, reason: string, kicked: boolean)
+	table.insert(log, 1, {
+		Time = os.time(),
+		Player = player.Name,
+		UserId = player.UserId,
+		Reason = reason,
+		Kicked = kicked,
+	})
+	if #log > MAX_LOG then
+		table.remove(log)
+	end
+end
+
+-- Cópia das últimas advertências (mais recentes primeiro).
+function ACSGuard.GetLog()
+	return table.clone(log)
+end
+
 local function getState(player: Player): PlayerState
 	local state = states[player]
 	if not state then
@@ -84,7 +106,10 @@ local function strike(player: Player, reason: string)
 
 	warn(`[ACSGuard] {player.Name} ({player.UserId}): {reason} [{#state.Strikes}/{config.StrikesToKick}]`)
 
-	if #state.Strikes >= config.StrikesToKick then
+	local kicked = #state.Strikes >= config.StrikesToKick
+	addLog(player, reason, kicked)
+
+	if kicked then
 		warn(`[ACSGuard] {player.Name} foi kickado.`)
 		player:Kick(config.KickMessage)
 	end

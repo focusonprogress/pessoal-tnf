@@ -41,7 +41,11 @@ end
 -- "Nv 12 · Sargento" ou só "Nv 1"
 local function tagText(player: Player): string
 	local level = player:GetAttribute("Level") or 1
-	local title = player:GetAttribute("Title")
+	-- Título exclusivo equipado (passe de temporada) tem prioridade sobre o do nível.
+	local title = player:GetAttribute("EquippedTitle")
+	if type(title) ~= "string" or title == "" then
+		title = player:GetAttribute("Title")
+	end
 	if type(title) == "string" and title ~= "" then
 		return `Nv {level} · {title}`
 	end
@@ -150,7 +154,7 @@ local function onPlayerAdded(player: Player)
 			updateTag(player)
 		end)
 	end
-	for _, attribute in { "Level", "Title" } do
+	for _, attribute in { "Level", "Title", "EquippedTitle" } do
 		player:GetAttributeChangedSignal(attribute):Connect(function()
 			updateTag(player)
 		end)
