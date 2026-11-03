@@ -54,6 +54,17 @@ Config.Dummies = {
 -- nil = não entrega nada (usa as armas que o jogador já ganha ao nascer).
 Config.TrainingWeapon = nil :: string?
 
+-- Intro com câmera: quando o jogador chega no treino, a câmera voa até os
+-- bonecos, mostra eles e volta. O jogador fica parado durante a intro.
+Config.Intro = {
+	Enabled = true,
+	FlyTime = 2, -- segundos indo até os bonecos
+	HoldTime = 3, -- segundos mostrando os bonecos
+	ReturnTime = 1.5, -- segundos voltando para o jogador
+	Title = "MODO TREINO",
+	Subtitle = "Acerte os alvos de treino! Você tem 5 minutos.",
+}
+
 -- Dicas mostradas no painel, em ordem. Trocam a cada TipInterval segundos.
 Config.TipInterval = 12
 Config.Tips = {

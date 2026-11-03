@@ -1,7 +1,11 @@
 --[[
-	HUD do modo treino: painel com tempo, alvos abatidos e dicas, e o aviso
-	"INDO PARA O MODO PRINCIPAL!" no final.
-	Lê os atributos TrainingEndsAt, TrainingKills e TrainingEnding do Player.
+	HUD do modo treino:
+	- Intro com câmera: voa até os bonecos, mostra e volta para o jogador
+	- Painel com tempo, alvos abatidos e dicas (aparece depois da intro)
+	- Aviso "INDO PARA O MODO PRINCIPAL!" no final
+
+	Lê os atributos TrainingEndsAt, TrainingKills, TrainingFocus e
+	TrainingEnding do Player.
 ]]
 
 local Players = game:GetService("Players")
@@ -39,12 +43,16 @@ local gui = Instance.new("ScreenGui")
 gui.Name = "Training"
 gui.ResetOnSpawn = false
 gui.DisplayOrder = 7
+gui.IgnoreGuiInset = true
 gui.Parent = player:WaitForChild("PlayerGui")
 
+---------------------------------------------------------------------------
 -- Painel (lado direito)
+---------------------------------------------------------------------------
+
 local panel = Instance.new("Frame")
 panel.AnchorPoint = Vector2.new(1, 0)
-panel.Position = UDim2.new(1, -16, 0.2, 0)
+panel.Position = UDim2.new(1, -16, 0.22, 0)
 panel.Size = UDim2.fromOffset(300, 150)
 panel.BackgroundColor3 = DARK
 panel.BackgroundTransparency = 0.15
@@ -114,6 +122,57 @@ local tipLabel = label(panel, {
 	Text = "",
 })
 
+---------------------------------------------------------------------------
+-- Intro (faixas de cinema + título)
+---------------------------------------------------------------------------
+
+local topBar = Instance.new("Frame")
+topBar.BackgroundColor3 = Color3.new(0, 0, 0)
+topBar.BorderSizePixel = 0
+topBar.Size = UDim2.new(1, 0, 0, 0)
+topBar.Visible = false
+topBar.Parent = gui
+
+local bottomBar = Instance.new("Frame")
+bottomBar.BackgroundColor3 = Color3.new(0, 0, 0)
+bottomBar.BorderSizePixel = 0
+bottomBar.AnchorPoint = Vector2.new(0, 1)
+bottomBar.Position = UDim2.fromScale(0, 1)
+bottomBar.Size = UDim2.new(1, 0, 0, 0)
+bottomBar.Visible = false
+bottomBar.Parent = gui
+
+local introTitle = label(gui, {
+	AnchorPoint = Vector2.new(0.5, 1),
+	Position = UDim2.new(0.5, 0, 0.8, 0),
+	Size = UDim2.new(0.9, 0, 0, 56),
+	Font = Enum.Font.GothamBlack,
+	TextScaled = true,
+	TextXAlignment = Enum.TextXAlignment.Center,
+	TextColor3 = ACCENT,
+	TextStrokeTransparency = 0.4,
+	TextTransparency = 1,
+	Text = Config.Intro.Title,
+})
+local introTitleLimit = Instance.new("UITextSizeConstraint")
+introTitleLimit.MaxTextSize = 52
+introTitleLimit.Parent = introTitle
+
+local introSubtitle = label(gui, {
+	AnchorPoint = Vector2.new(0.5, 0),
+	Position = UDim2.new(0.5, 0, 0.8, 4),
+	Size = UDim2.new(0.9, 0, 0, 24),
+	Font = Enum.Font.GothamMedium,
+	TextScaled = true,
+	TextXAlignment = Enum.TextXAlignment.Center,
+	TextStrokeTransparency = 0.5,
+	TextTransparency = 1,
+	Text = Config.Intro.Subtitle,
+})
+local introSubtitleLimit = Instance.new("UITextSizeConstraint")
+introSubtitleLimit.MaxTextSize = 22
+introSubtitleLimit.Parent = introSubtitle
+
 -- Aviso grande do final
 local banner = label(gui, {
 	AnchorPoint = Vector2.new(0.5, 0.5),
@@ -132,9 +191,28 @@ bannerLimit.MaxTextSize = 48
 bannerLimit.Parent = banner
 
 ---------------------------------------------------------------------------
--- Atualização
+-- Controles do jogador (parar durante a intro)
 ---------------------------------------------------------------------------
 
+local function setControlsEnabled(enabled: boolean)
+	pcall(function()
+		local playerModule = require(player:WaitForChild("PlayerScripts"):WaitForChild("PlayerModule", 5) :: ModuleScript)
+		local controls = playerModule:GetControls()
+		if enabled then
+			controls:Enable()
+		else
+			controls:Disable()
+		end
+	end)
+end
+
+---------------------------------------------------------------------------
+-- Estado
+---------------------------------------------------------------------------
+
+local inTraining = false
+local introDone = false
+local introRunning = false
 local tipIndex = 1
 local nextTipAt = 0
 
@@ -158,13 +236,135 @@ local function updateScale()
 	end
 end
 
+local function showPanel()
+	if panel.Visible or not inTraining then
+		return
+	end
+	updateScale()
+	panel.Visible = true
+	showTip(1)
+end
+
+-- A tela de escolha de time está aberta?
+local function teamSelectOpen(): boolean
+	local playerGui = player:FindFirstChildOfClass("PlayerGui")
+	local teamSelect = playerGui and playerGui:FindFirstChild("TeamSelect")
+	return teamSelect ~= nil and teamSelect:IsA("ScreenGui") and teamSelect.Enabled
+end
+
+local function tween(instance: Instance, seconds: number, goal: { [string]: any }, style: Enum.EasingStyle?): Tween
+	local animation = TweenService:Create(instance, TweenInfo.new(seconds, style or Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), goal)
+	animation:Play()
+	return animation
+end
+
+local function restoreView()
+	local camera = workspace.CurrentCamera
+	if camera then
+		camera.CameraType = Enum.CameraType.Custom
+		local humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
+		if humanoid then
+			camera.CameraSubject = humanoid
+		end
+	end
+	introTitle.TextTransparency = 1
+	introSubtitle.TextTransparency = 1
+	setControlsEnabled(true)
+end
+
+-- A câmera voa até os bonecos, mostra eles e volta.
+local function runCameraIntro(root: BasePart, focus: Vector3)
+	local camera = workspace.CurrentCamera
+	setControlsEnabled(false)
+
+	-- Faixas de cinema entram
+	topBar.Visible = true
+	bottomBar.Visible = true
+	tween(topBar, 0.5, { Size = UDim2.new(1, 0, 0.12, 0) })
+	tween(bottomBar, 0.5, { Size = UDim2.new(1, 0, 0.12, 0) })
+
+	-- Vista de cima dos bonecos, do lado de onde o jogador está
+	camera.CameraType = Enum.CameraType.Scriptable
+	local fromPlayer = root.Position - focus
+	local flat = Vector3.new(fromPlayer.X, 0, fromPlayer.Z)
+	local direction = if flat.Magnitude > 0.1 then flat.Unit else Vector3.new(0, 0, 1)
+	local viewPosition = focus + direction * 24 + Vector3.new(0, 14, 0)
+	tween(camera, Config.Intro.FlyTime, { CFrame = CFrame.lookAt(viewPosition, focus) }, Enum.EasingStyle.Sine)
+
+	task.wait(Config.Intro.FlyTime * 0.6)
+	tween(introTitle, 0.5, { TextTransparency = 0 })
+	tween(introSubtitle, 0.5, { TextTransparency = 0 })
+	task.wait(Config.Intro.FlyTime * 0.4 + Config.Intro.HoldTime)
+
+	-- Volta para trás do jogador
+	tween(introTitle, 0.4, { TextTransparency = 1 })
+	tween(introSubtitle, 0.4, { TextTransparency = 1 })
+	local currentRoot = (player.Character and player.Character:FindFirstChild("HumanoidRootPart")) or root
+	local backCFrame = CFrame.lookAt(
+		currentRoot.Position - currentRoot.CFrame.LookVector * 10 + Vector3.new(0, 4, 0),
+		currentRoot.Position + Vector3.new(0, 1.5, 0)
+	)
+	tween(camera, Config.Intro.ReturnTime, { CFrame = backCFrame }, Enum.EasingStyle.Sine).Completed:Wait()
+end
+
+local function playIntro()
+	if introRunning or introDone then
+		return
+	end
+	introRunning = true
+
+	-- Espera a tela de times fechar.
+	while inTraining and teamSelectOpen() do
+		task.wait(0.25)
+	end
+
+	-- Espera o personagem e os bonecos ficarem perto dele (até 4s).
+	local root, focus
+	local deadline = os.clock() + 4
+	repeat
+		task.wait(0.25)
+		local character = player.Character
+		root = character and character:FindFirstChild("HumanoidRootPart")
+		focus = player:GetAttribute("TrainingFocus")
+		local ready = root and typeof(focus) == "Vector3" and (root.Position - focus).Magnitude < 200
+	until ready or os.clock() > deadline or not inTraining
+
+	if inTraining and root and typeof(focus) == "Vector3" and workspace.CurrentCamera then
+		local ok, err = pcall(runCameraIntro, root, focus)
+		if not ok then
+			warn("[Training] Erro na intro:", err)
+		end
+	end
+
+	-- Sempre devolve a câmera, os controles e tira as faixas.
+	restoreView()
+	tween(topBar, 0.4, { Size = UDim2.new(1, 0, 0, 0) })
+	tween(bottomBar, 0.4, { Size = UDim2.new(1, 0, 0, 0) }).Completed:Wait()
+	topBar.Visible = false
+	bottomBar.Visible = false
+
+	introRunning = false
+	introDone = true
+	showPanel()
+end
+
 local function refresh()
 	local endsAt = player:GetAttribute("TrainingEndsAt")
-	local wasVisible = panel.Visible
-	panel.Visible = type(endsAt) == "number"
-	if panel.Visible and not wasVisible then
-		updateScale()
-		showTip(1)
+	local nowInTraining = type(endsAt) == "number"
+
+	if nowInTraining and not inTraining then
+		-- Começou um treino novo
+		inTraining = true
+		introDone = false
+		if Config.Intro.Enabled then
+			task.spawn(playIntro)
+		else
+			introDone = true
+			showPanel()
+		end
+	elseif not nowInTraining and inTraining then
+		inTraining = false
+		panel.Visible = false
 	end
 
 	killsLabel.Text = `Alvos abatidos: {player:GetAttribute("TrainingKills") or 0}`

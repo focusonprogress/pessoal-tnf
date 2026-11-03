@@ -167,6 +167,15 @@ local function spawnDummies(session: Session, character: Model)
 	for _, spot in session.Spots do
 		createDummy(session, spot, session.Generation)
 	end
+
+	-- Centro dos bonecos, para a câmera da intro olhar para lá.
+	if #session.Spots > 0 then
+		local sum = Vector3.zero
+		for _, spot in session.Spots do
+			sum += spot.Position
+		end
+		session.Player:SetAttribute("TrainingFocus", sum / #session.Spots)
+	end
 end
 
 ---------------------------------------------------------------------------
@@ -248,6 +257,7 @@ function Training.End(player: Player, reason: string?, sendBack: boolean?)
 	end
 
 	player:SetAttribute("TrainingEndsAt", nil)
+	player:SetAttribute("TrainingFocus", nil)
 	player:SetAttribute("TrainingEnding", true)
 	Announcer.To(player, `🎯 {reason or "Treino concluído!"} Indo para o modo principal...`, "Event")
 
