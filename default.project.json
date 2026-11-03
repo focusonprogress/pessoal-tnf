@@ -59,6 +59,9 @@
       },
       "Achievements": {
         "$path": "src/shared/Achievements"
+      },
+      "Training": {
+        "$path": "src/shared/Training"
       }
     },
     "ServerScriptService": {
@@ -112,6 +115,9 @@
         },
         "DeathCam": {
           "$path": "src/client/DeathCam.client.luau"
+        },
+        "Training": {
+          "$path": "src/client/Training.client.luau"
         }
       }
     }

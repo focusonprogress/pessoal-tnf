@@ -1,6 +1,6 @@
 --[[
 	Inicia os sistemas de jogo: eventos, recompensa por cabeça, missões,
-	recompensa diária, conquistas e câmera de morte.
+	recompensa diária, conquistas, câmera de morte e modo treino.
 
 	Cada sistema liga separado: se um der problema, os outros continuam.
 	No Output (busque "Gameplay"):
@@ -77,6 +77,7 @@ for _, system in {
 	{ "DailyRewards", "Recompensa diária" },
 	{ "Achievements", "Conquistas" },
 	{ "DeathCam", "Câmera de morte" },
+	{ "Training", "Modo treino" },
 } do
 	task.spawn(startSystem, system[1], system[2])
 end

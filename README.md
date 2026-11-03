@@ -17,6 +17,7 @@ Sistemas para o meu jogo de tiro no Roblox (que usa o **ACS**).
 | Conquistas | ✅ |
 | Câmera de morte (assistir quem te matou) | ✅ |
 | Proteção do ACS contra kill all (ACSGuard) | ✅ |
+| Modo treino (servidor vazio) | ✅ |
 
 ---
 
@@ -66,6 +67,7 @@ da tabela abaixo e cole o conteúdo de cada arquivo.
 | `src/shared/Missions/Config.luau` | `ReplicatedStorage > Missions > Config` | ModuleScript |
 | `src/shared/DailyRewards/Config.luau` | `ReplicatedStorage > DailyRewards > Config` | ModuleScript |
 | `src/shared/Achievements/Config.luau` | `ReplicatedStorage > Achievements > Config` | ModuleScript |
+| `src/shared/Training/Config.luau` | `ReplicatedStorage > Training > Config` | ModuleScript |
 | — | `ReplicatedStorage > GameRemotes` (Announce, ClaimDaily, KilledBy) | criados sozinhos pelo servidor |
 | `src/server/Gameplay/Remotes.luau` | `ServerScriptService > Gameplay > Remotes` | ModuleScript |
 | `src/server/Gameplay/Announcer.luau` | `ServerScriptService > Gameplay > Announcer` | ModuleScript |
@@ -76,6 +78,7 @@ da tabela abaixo e cole o conteúdo de cada arquivo.
 | `src/server/Gameplay/DailyRewards.luau` | `ServerScriptService > Gameplay > DailyRewards` | ModuleScript |
 | `src/server/Gameplay/Achievements.luau` | `ServerScriptService > Gameplay > Achievements` | ModuleScript |
 | `src/server/Gameplay/DeathCam.luau` | `ServerScriptService > Gameplay > DeathCam` | ModuleScript |
+| `src/server/Gameplay/Training.luau` | `ServerScriptService > Gameplay > Training` | ModuleScript |
 | `src/server/StartGameplay.server.luau` | `ServerScriptService > StartGameplay` | Script |
 | `src/client/GameHUD.client.luau` | `StarterPlayer > StarterPlayerScripts > GameHUD` | LocalScript |
 | `src/client/BountyMarkers.client.luau` | `StarterPlayer > StarterPlayerScripts > BountyMarkers` | LocalScript |
@@ -83,10 +86,11 @@ da tabela abaixo e cole o conteúdo de cada arquivo.
 | `src/client/DailyRewards.client.luau` | `StarterPlayer > StarterPlayerScripts > DailyRewards` | LocalScript |
 | `src/client/Achievements.client.luau` | `StarterPlayer > StarterPlayerScripts > Achievements` | LocalScript |
 | `src/client/DeathCam.client.luau` | `StarterPlayer > StarterPlayerScripts > DeathCam` | LocalScript |
+| `src/client/Training.client.luau` | `StarterPlayer > StarterPlayerScripts > Training` | LocalScript |
 
 (`ReplicatedStorage > Progression`, `ServerScriptService > Progression`, `ReplicatedStorage > Hotbar`,
 `ReplicatedStorage > TeamSelect`, `ReplicatedStorage > TeamSelectRemotes`, `ReplicatedStorage > Nametags`, `Economy`, `GameEvents`, `Bounty`,
-`Missions`, `DailyRewards`, `Achievements`, `GameRemotes` e `ServerScriptService > Gameplay` são **Folders**.)
+`Missions`, `DailyRewards`, `Achievements`, `Training`, `GameRemotes` e `ServerScriptService > Gameplay` são **Folders**.)
 
 ---
 
@@ -286,3 +290,17 @@ limites tem o tiro ignorado e, depois de 5 advertências, é kickado.
 
 Precisa trocar a função `Damage` no script do servidor do ACS: passo a passo em
 [`docs/ACS_PATCH.md`](docs/ACS_PATCH.md).
+
+## Modo treino
+
+Quem entra num servidor **vazio** vai para o treino: nasce na área de treino, atira em
+bonecos (alguns andam) e recebe dicas sobre o jogo. Depois de **5 minutos**, ou quando
+**outro jogador entra**, os bonecos somem e o jogador renasce no spawn normal.
+Abates em bonecos não dão XP nem contam para missões.
+
+**Área de treino (opcional):** no Workspace, crie uma Folder `Treino` com uma Part `Spawn`
+e várias Parts `Alvo` (Anchored, CanCollide desligado, Transparency 1). Sem ela, os bonecos
+aparecem na frente do jogador.
+
+Configuração (tempo, bonecos, dicas, arma do treino) em
+[`src/shared/Training/Config.luau`](src/shared/Training/Config.luau).
