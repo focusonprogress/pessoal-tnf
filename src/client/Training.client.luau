@@ -318,9 +318,9 @@ local function playIntro()
 		task.wait(0.25)
 	end
 
-	-- Espera o personagem e os bonecos ficarem perto dele (até 4s).
+	-- Espera o personagem e os bonecos ficarem perto dele (até 6s).
 	local root, focus
-	local deadline = os.clock() + 4
+	local deadline = os.clock() + 6
 	repeat
 		task.wait(0.25)
 		local character = player.Character
@@ -348,6 +348,34 @@ local function playIntro()
 	showPanel()
 end
 
+-- Teleporta o próprio personagem para o spawn do treino. Feito no cliente
+-- porque é ele que controla a posição do personagem (o teleporte do servidor
+-- às vezes é desfeito logo depois de nascer).
+local function moveToTrainingSpawn(character: Model)
+	local root = character:WaitForChild("HumanoidRootPart", 10)
+	if not root or not root:IsA("BasePart") then
+		return
+	end
+	for _ = 1, 15 do
+		local spawnCFrame = player:GetAttribute("TrainingSpawn")
+		if not inTraining or typeof(spawnCFrame) ~= "CFrame" or character.Parent == nil then
+			return
+		end
+		local target = spawnCFrame + Vector3.new(0, 4, 0)
+		if (root.Position - target.Position).Magnitude > 20 then
+			character:PivotTo(target)
+			root.AssemblyLinearVelocity = Vector3.zero
+		end
+		task.wait(0.2)
+	end
+end
+
+player.CharacterAdded:Connect(function(character)
+	if inTraining then
+		task.spawn(moveToTrainingSpawn, character)
+	end
+end)
+
 local function refresh()
 	local endsAt = player:GetAttribute("TrainingEndsAt")
 	local nowInTraining = type(endsAt) == "number"
@@ -356,6 +384,9 @@ local function refresh()
 		-- Começou um treino novo
 		inTraining = true
 		introDone = false
+		if player.Character then
+			task.spawn(moveToTrainingSpawn, player.Character)
+		end
 		if Config.Intro.Enabled then
 			task.spawn(playIntro)
 		else

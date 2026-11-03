@@ -218,11 +218,24 @@ local function onTrainingCharacter(session: Session, character: Model)
 		return
 	end
 
-	-- Leva para a área de treino (se ela existir).
+	-- Leva para a área de treino (se ela existir). Confere por alguns segundos,
+	-- porque o Roblox ou outros scripts (spawn de time, renascer...) podem
+	-- mover o personagem logo depois que ele nasce.
 	local spawnCFrame = getSpawnCFrame()
-	if spawnCFrame then
-		task.wait() -- deixa o Roblox terminar de posicionar o personagem
-		character:PivotTo(spawnCFrame + Vector3.new(0, 4, 0))
+	if spawnCFrame and root:IsA("BasePart") then
+		local target = spawnCFrame + Vector3.new(0, 4, 0)
+		character:PivotTo(target)
+		task.spawn(function()
+			for _ = 1, 15 do
+				task.wait(0.2)
+				if not session.Active or character.Parent == nil then
+					break
+				end
+				if (root.Position - target.Position).Magnitude > 20 then
+					character:PivotTo(target)
+				end
+			end
+		end)
 	end
 
 	task.wait(0.5)
@@ -258,6 +271,7 @@ function Training.End(player: Player, reason: string?, sendBack: boolean?)
 
 	player:SetAttribute("TrainingEndsAt", nil)
 	player:SetAttribute("TrainingFocus", nil)
+	player:SetAttribute("TrainingSpawn", nil)
 	player:SetAttribute("TrainingEnding", true)
 	Announcer.To(player, `🎯 {reason or "Treino concluído!"} Indo para o modo principal...`, "Event")
 
@@ -295,6 +309,8 @@ function Training.Begin(player: Player)
 
 	player:SetAttribute("TrainingKills", 0)
 	player:SetAttribute("TrainingEndsAt", workspace:GetServerTimeNow() + Config.Duration)
+	-- O cliente também teleporta (ele controla a posição do próprio personagem).
+	player:SetAttribute("TrainingSpawn", getSpawnCFrame())
 
 	table.insert(
 		session.Connections,
